@@ -10,6 +10,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Entity
 @Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -17,20 +18,23 @@ public class User {
     @NotNull(message = "Email cannot be null")
     @Email(message = "Not a valid email address")
     private String email;
-    @Size(min = 8, max = 40, message = "Password must be 8-40 characters")
     private String password;
-    @NotBlank(message = "First name cannot be blank.")
     private String firstName;
     private String lastName;
     @ColumnDefault("0")
     private Integer currentPoints;
     @ColumnDefault("0")
     private Integer totalPoints;
-//    private List<Task> tasks;
-//    private Role role;
+    //    private List<Task> tasks;
+    private String role;
 
 
     public User() {
+    }
+
+    public User(String email, String password) {
+        this.email = email;
+        this.password = password;
     }
 
     public Integer getId() {
@@ -88,4 +92,13 @@ public class User {
     public void setTotalPoints(Integer totalPoints) {
         this.totalPoints = totalPoints;
     }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
 }
