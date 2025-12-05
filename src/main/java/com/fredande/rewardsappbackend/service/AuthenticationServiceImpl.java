@@ -28,7 +28,8 @@ public class AuthenticationServiceImpl implements AuthenticationServiceDef {
     private final CustomUserDetailsService userDetailsService;
     @Value("${jwt.secret}")
     private String secretKey;
-    private final Long expirationTime = 86400000L;
+    @Value("${jwt.expiration.ms:900000}")
+    private Long expirationTime;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
