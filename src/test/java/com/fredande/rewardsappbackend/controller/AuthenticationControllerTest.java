@@ -1,0 +1,182 @@
+package com.fredande.rewardsappbackend.controller;
+
+import com.fredande.rewardsappbackend.dto.LoginRequest;
+import com.fredande.rewardsappbackend.model.User;
+import com.fredande.rewardsappbackend.repository.UserRepository;
+import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import tools.jackson.databind.ObjectMapper;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@SpringBootTest
+@AutoConfigureMockMvc
+@ActiveProfiles("test")
+@Transactional
+class AuthenticationControllerTest {
+
+    @Autowired
+    private MockMvc mvc;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    /**
+     * Valid login should return an AuthResponse object, consisting of a JWT, expires in time, a role and 200 OK.
+     * In the arrange stage a user is saved to the database and a LoginRequest is created.
+     * During Act a POST request is made to the login end-point using the LoginRequest object.
+     * Lastly asserting that the response corresponds to what is expected.
+     **/
+    @Test
+    void validLoginCredentials() throws Exception {
+        // Arrange
+        String email = "test@test.test";
+        String password = "testPassword";
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setRole("ADMIN");
+        userRepository.save(user);
+
+        LoginRequest loginRequest = new LoginRequest(email, password);
+
+        // Act & Assert
+        mvc.perform(post("/api/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.token").exists())
+                .andExpect(jsonPath("$.expiresIn").value(86400L))
+                .andExpect(jsonPath("$.roles").exists());
+    }
+
+
+    /**
+     * Attempting to login with a non-existing email should return status 401 Unauthorized and a message.
+     * In the arrange stage a user is saved to the database and a LoginRequest with an email not registered in the
+     * database is created.
+     * During Act a POST request is made to the login end-point using the LoginRequest object with the "bad" email..
+     * Lastly asserting that the response is 401 Unauthorized and the message is the correct one.
+     **/
+    @Test
+    void invalidLoginCredentials_nonExistingUser() throws Exception {
+        // Arrange
+        String badEmail = "fest@test.test";
+        String email = "test@test.test";
+        String password = "testPassword";
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setRole("ADMIN");
+        userRepository.save(user);
+
+        LoginRequest loginRequest = new LoginRequest(badEmail, password);
+
+        // Act & Assert
+        mvc.perform(post("/api/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().string("Invalid email or password"));
+    }
+
+
+    /**
+     * Attempting to login with an invalid password should return status 401 Unauthorized and a message.
+     * In the arrange stage a user is saved to the database and a LoginRequest with a mismatching password is created.
+     * During Act a POST request is made to the login end-point using the LoginRequest object with the "bad" password.
+     * Lastly asserting that the response is 401 Unauthorized and the message is the correct one.
+     **/
+    @Test
+    void invalidLoginCredentials_invalidPassword() throws Exception {
+        // Arrange
+        String invalidPassword = "password1234";
+        String email = "test@test.test";
+        String password = "testPassword";
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setRole("ADMIN");
+        userRepository.save(user);
+
+        LoginRequest loginRequest = new LoginRequest(email, invalidPassword);
+
+        // Act & Assert
+        mvc.perform(post("/api/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().string("Invalid email or password"));
+    }
+
+    /**
+     * Attempting to login with an empty email should return status 401 Unauthorized and a message.
+     * In the arrange stage a user is saved to the database and a LoginRequest with an empty email is created.
+     * During Act a POST request is made to the login end-point using the LoginRequest object with the empty email.
+     * Lastly asserting that the response is 401 Unauthorized and the message is the correct one.
+     **/
+    @Test
+    void invalidLoginCredentials_emptyEmail() throws Exception {
+        // Arrange
+        String email = "test@test.test";
+        String password = "testPassword";
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setRole("ADMIN");
+        userRepository.save(user);
+
+        LoginRequest loginRequest = new LoginRequest("", password);
+
+        // Act & Assert
+        mvc.perform(post("/api/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().string("Invalid email or password"));
+    }
+
+
+    /**
+     * Attempting to login with an empty password should return status 401 Unauthorized and a message.
+     * In the arrange stage a user is saved to the database and a LoginRequest with an empty password is created.
+     * During Act a POST request is made to the login end-point using the LoginRequest object with the empty password.
+     * Lastly asserting that the response is 401 Unauthorized and the message is the correct one.
+     **/
+    @Test
+    void invalidLoginCredentials_emptyPassword() throws Exception {
+        // Arrange
+        String email = "test@test.test";
+        String password = "testPassword";
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setRole("ADMIN");
+        userRepository.save(user);
+
+        LoginRequest loginRequest = new LoginRequest(email, "");
+
+        // Act & Assert
+        mvc.perform(post("/api/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().string("Invalid email or password"));
+    }
+
+}
