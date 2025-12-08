@@ -1,11 +1,12 @@
 package com.fredande.rewardsappbackend.service;
 
 import com.fredande.rewardsappbackend.CustomUserDetailsService;
-import com.fredande.rewardsappbackend.dto.LoginRequest;
+import com.fredande.rewardsappbackend.dto.RegistrationRequest;
 import com.fredande.rewardsappbackend.model.User;
 import com.fredande.rewardsappbackend.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.persistence.EntityExistsException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -75,12 +76,12 @@ public class AuthenticationServiceImpl implements AuthenticationServiceDef {
 //    }
 
     @Override
-    public void register(LoginRequest user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            throw new RuntimeException("Username already exists");
+    public void register(RegistrationRequest registrationRequest) {
+        registrationRequest.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
+        if (userRepository.findByEmail(registrationRequest.getEmail()).isPresent()) {
+            throw new EntityExistsException("Email already registered");
         }
-        userRepository.save(new User(user.getEmail(), user.getPassword()));
+        userRepository.save(new User(registrationRequest.getEmail(), registrationRequest.getPassword()));
     }
 
 //    private String extractUsername(String token) {
