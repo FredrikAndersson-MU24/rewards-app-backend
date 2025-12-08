@@ -1,6 +1,6 @@
 package com.fredande.rewardsappbackend.service;
 
-import com.fredande.rewardsappbackend.dto.LoginRequest;
+import com.fredande.rewardsappbackend.dto.RegistrationRequest;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public interface AuthenticationServiceDef {
@@ -10,6 +10,6 @@ public interface AuthenticationServiceDef {
     String generateToken(UserDetails userDetails);
 
     //    UserDetails validateToken(String token);
-    void register(LoginRequest user);
+    void register(RegistrationRequest registrationRequest);
 
 }
