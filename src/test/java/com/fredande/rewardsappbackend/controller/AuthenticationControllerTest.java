@@ -43,7 +43,7 @@ class AuthenticationControllerTest {
      * Lastly asserting that the response corresponds to what is expected.
      **/
     @Test
-    void validLoginCredentials() throws Exception {
+    void login_valid() throws Exception {
         // Arrange
         String email = "test@test.test";
         String password = "P@ss123456";
@@ -74,7 +74,7 @@ class AuthenticationControllerTest {
      * Lastly asserting that the response is 401 Unauthorized and the message is the correct one.
      **/
     @Test
-    void invalidLoginCredentials_nonExistingUser() throws Exception {
+    void login_invalid_email_nonExisting() throws Exception {
         // Arrange
         String badEmail = "fest@test.test";
         String email = "test@test.test";
@@ -103,7 +103,7 @@ class AuthenticationControllerTest {
      * Lastly asserting that the response is 401 Unauthorized and the message is the correct one.
      **/
     @Test
-    void invalidLoginCredentials_invalidPassword() throws Exception {
+    void login_invalid_password_wrong() throws Exception {
         // Arrange
         String invalidPassword = "password1234";
         String email = "test@test.test";
@@ -131,7 +131,7 @@ class AuthenticationControllerTest {
      * Lastly asserting that the response is 401 Unauthorized and the message is the correct one.
      **/
     @Test
-    void invalidLoginCredentials_emptyEmail() throws Exception {
+    void login_invalid_email_empty() throws Exception {
         // Arrange
         String email = "test@test.test";
         String password = "P@ss123456";
@@ -159,7 +159,7 @@ class AuthenticationControllerTest {
      * Lastly asserting that the response is 401 Unauthorized and the message is the correct one.
      **/
     @Test
-    void invalidLoginCredentials_emptyPassword() throws Exception {
+    void login_invalid_password_empty() throws Exception {
         // Arrange
         String email = "test@test.test";
         String password = "P@ss123456";
