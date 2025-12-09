@@ -17,6 +17,14 @@ public class RegistrationRequest {
             message = "Password must be " + minPasswordLength + " to " + maxPasswordLength + " characters")
     private String password;
 
+    public RegistrationRequest() {
+    }
+
+    public RegistrationRequest(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
     public String getEmail() {
         return email;
     }
