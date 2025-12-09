@@ -50,11 +50,7 @@ public class AuthenticationServiceImpl implements AuthenticationServiceDef {
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Invalid email or password", e);
         }
-        try {
-            return userDetailsService.loadUserByEmail(username);
-        } catch (Exception e) {
-            throw e;
-        }
+        return userDetailsService.loadUserByEmail(username);
     }
 
     @Override
@@ -97,5 +93,7 @@ public class AuthenticationServiceImpl implements AuthenticationServiceDef {
         byte[] keyBytes = secretKey.getBytes();
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
+    // TODO Add password character restriction and validation
 
 }
