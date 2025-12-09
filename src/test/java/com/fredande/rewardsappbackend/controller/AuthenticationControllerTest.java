@@ -43,14 +43,13 @@ class AuthenticationControllerTest {
      * Lastly asserting that the response corresponds to what is expected.
      **/
     @Test
-    void validLoginCredentials() throws Exception {
+    void login_valid() throws Exception {
         // Arrange
         String email = "test@test.test";
-        String password = "testPassword";
+        String password = "P@ss123456";
         User user = new User();
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
-        user.setRole("ADMIN");
         userRepository.save(user);
 
         LoginRequest loginRequest = new LoginRequest(email, password);
@@ -74,11 +73,11 @@ class AuthenticationControllerTest {
      * Lastly asserting that the response is 401 Unauthorized and the message is the correct one.
      **/
     @Test
-    void invalidLoginCredentials_nonExistingUser() throws Exception {
+    void login_invalid_email_nonExisting() throws Exception {
         // Arrange
         String badEmail = "fest@test.test";
         String email = "test@test.test";
-        String password = "testPassword";
+        String password = "P@ss123456";
         User user = new User();
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
@@ -103,11 +102,11 @@ class AuthenticationControllerTest {
      * Lastly asserting that the response is 401 Unauthorized and the message is the correct one.
      **/
     @Test
-    void invalidLoginCredentials_invalidPassword() throws Exception {
+    void login_invalid_password_wrong() throws Exception {
         // Arrange
         String invalidPassword = "password1234";
         String email = "test@test.test";
-        String password = "testPassword";
+        String password = "P@ss123456";
         User user = new User();
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
@@ -131,10 +130,10 @@ class AuthenticationControllerTest {
      * Lastly asserting that the response is 401 Unauthorized and the message is the correct one.
      **/
     @Test
-    void invalidLoginCredentials_emptyEmail() throws Exception {
+    void login_invalid_email_empty() throws Exception {
         // Arrange
         String email = "test@test.test";
-        String password = "testPassword";
+        String password = "P@ss123456";
         User user = new User();
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
@@ -159,10 +158,10 @@ class AuthenticationControllerTest {
      * Lastly asserting that the response is 401 Unauthorized and the message is the correct one.
      **/
     @Test
-    void invalidLoginCredentials_emptyPassword() throws Exception {
+    void login_invalid_password_empty() throws Exception {
         // Arrange
         String email = "test@test.test";
-        String password = "testPassword";
+        String password = "P@ss123456";
         User user = new User();
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
@@ -177,6 +176,225 @@ class AuthenticationControllerTest {
                         .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().string("Invalid email or password"));
+    }
+
+    /**
+     * Registering with a valid email and password should return 201.
+     */
+    @Test
+    void register_valid() throws Exception {
+        // Arrange
+        String email = "test@test.test";
+        String password = "P@ss123456";
+        LoginRequest loginRequest = new LoginRequest(email, password);
+
+
+        // Act & Assert
+        mvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().isCreated())
+                .andExpect(content().string("User registered successfully"));
+    }
+
+    /**
+     * Registering with an invalid email and password should return 400.
+     * Malformed email where the top level domain is missing
+     */
+    @Test
+    void register_invalid_email_noTLD() throws Exception {
+        // Arrange
+        String email = "test@test";
+        String password = "P@ss123456";
+        LoginRequest loginRequest = new LoginRequest(email, password);
+
+
+        // Act & Assert
+        mvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().is(400))
+                .andExpect(content().string("Malformed email address"));
+    }
+
+    /**
+     * Registering with an invalid email and password should return 400.
+     * Malformed email where the user is missing
+     */
+    @Test
+    void register_invalid_email_noUser() throws Exception {
+        // Arrange
+        String email = "@test.test";
+        String password = "P@ss123456";
+        LoginRequest loginRequest = new LoginRequest(email, password);
+
+
+        // Act & Assert
+        mvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().is(400))
+                .andExpect(content().string("Malformed email address"));
+    }
+
+    /**
+     * Registering with an invalid email and password should return 400.
+     * Malformed email where the domain name is missing
+     */
+    @Test
+    void register_invalid_email_noDomain() throws Exception {
+        // Arrange
+        String email = "test@.test";
+        String password = "P@ss123456";
+        LoginRequest loginRequest = new LoginRequest(email, password);
+
+
+        // Act & Assert
+        mvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().is(400))
+                .andExpect(content().string("Malformed email address"));
+    }
+
+    /**
+     * Registering with an invalid email and password should return 400.
+     * Malformed email where the at sign is missing
+     */
+    @Test
+    void register_invalid_email_noAtSign() throws Exception {
+        // Arrange
+        String email = "testtest.test";
+        String password = "P@ss123456";
+        LoginRequest loginRequest = new LoginRequest(email, password);
+
+
+        // Act & Assert
+        mvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().is(400))
+                .andExpect(content().string("Malformed email address"));
+    }
+
+    /**
+     * Registering with an invalid email and password should return 400.
+     * Malformed email where the punctuation between domain and top level domain is missing
+     */
+    @Test
+    void register_invalid_email_noPunctuationBeforeTLD() throws Exception {
+        // Arrange
+        String email = "test@testtest";
+        String password = "P@ss123456";
+        LoginRequest loginRequest = new LoginRequest(email, password);
+
+
+        // Act & Assert
+        mvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().is(400))
+                .andExpect(content().string("Malformed email address"));
+    }
+
+    /**
+     * Registering with an invalid email and password should return 400.
+     * Malformed email using a character that is not permitted.
+     */
+    @Test
+    void register_invalid_email_unpermittedCharacter() throws Exception {
+        // Arrange
+        String email = "|test@testtest";
+        String password = "P@ss123456";
+        LoginRequest loginRequest = new LoginRequest(email, password);
+
+
+        // Act & Assert
+        mvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().is(400))
+                .andExpect(content().string("Malformed email address"));
+    }
+
+
+    /**
+     * Registering with an invalid email and password should return 400.
+     * Malformed email using a character that is not permitted.
+     */
+    @Test
+    void register_invalid_password_tooShort() throws Exception {
+        // Arrange
+        String email = "test@test.test";
+        String password = "P@ss123";
+        LoginRequest loginRequest = new LoginRequest(email, password);
+
+
+        // Act & Assert
+        mvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().is(400))
+                .andExpect(content().string("Password must be 8 to 40 characters"));
+    }
+
+
+    /**
+     * Registering with an invalid email and password should return 400.
+     * Malformed email using a character that is not permitted.
+     */
+    @Test
+    void register_invalid_password_tooLong() throws Exception {
+        // Arrange
+        String email = "test@testtest";
+        String password = "P@ss123456P@ss123456P@ss123456P@ss123456";
+        LoginRequest loginRequest = new LoginRequest(email, password);
+
+
+        // Act & Assert
+        mvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().is(400))
+                .andExpect(content().string("Malformed email address"));
+    }
+
+    /**
+     * Registering with empty email should return 400.
+     */
+    @Test
+    void register_invalid_email_missing() throws Exception {
+        // Arrange
+        String email = "";
+        String password = "P@ss123456";
+        LoginRequest loginRequest = new LoginRequest(email, password);
+
+
+        // Act & Assert
+        mvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().is(400))
+                .andExpect(content().string("Malformed email address"));
+    }
+
+    /**
+     * Registering with empty password should return 400.
+     */
+    @Test
+    void register_invalid_password_missing() throws Exception {
+        // Arrange
+        String email = "test@test.test";
+        String password = "";
+        LoginRequest loginRequest = new LoginRequest(email, password);
+
+
+        // Act & Assert
+        mvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().is(400))
+                .andExpect(content().string("Password must be 8 to 40 characters"));
     }
 
 }

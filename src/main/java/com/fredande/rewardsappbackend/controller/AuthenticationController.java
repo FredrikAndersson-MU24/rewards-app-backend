@@ -2,7 +2,10 @@ package com.fredande.rewardsappbackend.controller;
 
 import com.fredande.rewardsappbackend.dto.AuthResponse;
 import com.fredande.rewardsappbackend.dto.LoginRequest;
+import com.fredande.rewardsappbackend.dto.RegistrationRequest;
 import com.fredande.rewardsappbackend.service.AuthenticationServiceDef;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,6 +34,12 @@ public class AuthenticationController {
         String roles = userDetails.getAuthorities().toString();
         AuthResponse authResponse = new AuthResponse(token, EXPIRES_IN, roles);
         return ResponseEntity.ok(authResponse);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<String> register(@RequestBody @Valid RegistrationRequest registrationRequest) {
+        authService.register(registrationRequest);
+        return ResponseEntity.status(HttpStatusCode.valueOf(201)).body("User registered successfully");
     }
 
 }
