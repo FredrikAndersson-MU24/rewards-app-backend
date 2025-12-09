@@ -50,7 +50,6 @@ class AuthenticationControllerTest {
         User user = new User();
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
-        user.setRole("ADMIN");
         userRepository.save(user);
 
         LoginRequest loginRequest = new LoginRequest(email, password);
