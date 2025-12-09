@@ -21,20 +21,15 @@ public class User {
     private String password;
     private String firstName;
     private String lastName;
-    @ColumnDefault("0")
     private Integer currentPoints;
-    @ColumnDefault("0")
     private Integer totalPoints;
     //    private List<Task> tasks;
     private String role;
 
-
     public User() {
-    }
-
-    public User(String email, String password) {
-        this.email = email;
-        this.password = password;
+        this.currentPoints = 0;
+        this.totalPoints = 0;
+        this.role = "ADMIN";
     }
 
     public Integer getId() {
