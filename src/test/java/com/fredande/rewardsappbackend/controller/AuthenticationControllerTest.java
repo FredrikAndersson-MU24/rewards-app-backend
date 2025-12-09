@@ -325,7 +325,7 @@ class AuthenticationControllerTest {
     @Test
     void register_invalid_password_tooShort() throws Exception {
         // Arrange
-        String email = "|test@testtest";
+        String email = "test@test.test";
         String password = "P@ss123";
         LoginRequest loginRequest = new LoginRequest(email, password);
 
