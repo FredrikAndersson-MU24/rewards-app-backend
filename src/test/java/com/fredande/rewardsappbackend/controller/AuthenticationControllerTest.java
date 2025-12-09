@@ -46,7 +46,7 @@ class AuthenticationControllerTest {
     void validLoginCredentials() throws Exception {
         // Arrange
         String email = "test@test.test";
-        String password = "testPassword";
+        String password = "P@ss123456";
         User user = new User();
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
@@ -78,7 +78,7 @@ class AuthenticationControllerTest {
         // Arrange
         String badEmail = "fest@test.test";
         String email = "test@test.test";
-        String password = "testPassword";
+        String password = "P@ss123456";
         User user = new User();
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
@@ -107,7 +107,7 @@ class AuthenticationControllerTest {
         // Arrange
         String invalidPassword = "password1234";
         String email = "test@test.test";
-        String password = "testPassword";
+        String password = "P@ss123456";
         User user = new User();
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
@@ -134,7 +134,7 @@ class AuthenticationControllerTest {
     void invalidLoginCredentials_emptyEmail() throws Exception {
         // Arrange
         String email = "test@test.test";
-        String password = "testPassword";
+        String password = "P@ss123456";
         User user = new User();
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
@@ -162,7 +162,7 @@ class AuthenticationControllerTest {
     void invalidLoginCredentials_emptyPassword() throws Exception {
         // Arrange
         String email = "test@test.test";
-        String password = "testPassword";
+        String password = "P@ss123456";
         User user = new User();
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
