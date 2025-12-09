@@ -77,7 +77,10 @@ public class AuthenticationServiceImpl implements AuthenticationServiceDef {
         if (userRepository.findByEmail(registrationRequest.getEmail()).isPresent()) {
             throw new EntityExistsException("Email already registered");
         }
-        userRepository.save(new User(registrationRequest.getEmail(), registrationRequest.getPassword()));
+        User user = new User();
+        user.setPassword(registrationRequest.getPassword());
+        user.setEmail(registrationRequest.getEmail());
+        userRepository.save(user);
     }
 
 //    private String extractUsername(String token) {
