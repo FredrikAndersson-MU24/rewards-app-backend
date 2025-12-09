@@ -66,7 +66,9 @@ class AuthenticationServiceTest {
         String email = "test@test.test";
         String password = "pass1234";
         RegistrationRequest registrationRequest = new RegistrationRequest(email, password);
-        User user = new User(email, password);
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(password);
         when(userRepository.findByEmail(registrationRequest.getEmail())).thenReturn(Optional.of(user));
 
         //Act
@@ -84,7 +86,9 @@ class AuthenticationServiceTest {
         // Arrange
         String email = "test@test.test";
         String password = "pass1234";
-        User user = new User("test@test.test", password);
+        User user = new User();
+        user.setEmail("test@test.test");
+        user.setPassword(password);
         CustomUserDetails customUserDetails = new CustomUserDetails(user);
         LoginRequest loginRequest = new LoginRequest(email, password);
         when(userDetailsService.loadUserByUsername(loginRequest.getEmail())).thenReturn(customUserDetails);
