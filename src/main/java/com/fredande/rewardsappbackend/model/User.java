@@ -2,7 +2,8 @@ package com.fredande.rewardsappbackend.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import org.hibernate.annotations.ColumnDefault;
+
+import java.util.List;
 
 //import java.util.List;
 
@@ -23,7 +24,8 @@ public class User {
     private String lastName;
     private Integer currentPoints;
     private Integer totalPoints;
-    //    private List<Task> tasks;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Task> tasks;
     private String role;
 
     public User() {

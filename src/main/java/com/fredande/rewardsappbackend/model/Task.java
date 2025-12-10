@@ -12,14 +12,25 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer userId;
+    //    private Integer userId;
     private String title;
     private String description;
     private Integer points;
     @CreationTimestamp
     private Date created;
     private Date updated;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
     private boolean isDone;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public Task() {
         this.isDone = false;
@@ -31,14 +42,6 @@ public class Task {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
     }
 
     public String getTitle() {
