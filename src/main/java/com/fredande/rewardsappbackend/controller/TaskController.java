@@ -21,6 +21,10 @@ public class TaskController {
         this.taskService = taskService;
     }
 
+    @GetMapping
+    public ResponseEntity<List<Task>> hello(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        return ResponseEntity.ok(taskService.getTasksByUser(userDetails));
+    }
 
     @PostMapping
     public ResponseEntity<TaskSavedResponse> create(@RequestBody @Valid Task task) {
