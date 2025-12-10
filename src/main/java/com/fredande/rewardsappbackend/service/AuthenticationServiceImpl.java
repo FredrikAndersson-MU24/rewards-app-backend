@@ -83,20 +83,6 @@ public class AuthenticationServiceImpl implements AuthenticationServiceDef {
         userRepository.save(user);
     }
 
-//    private String extractUsername(String token) {
-//        Claims claims = Jwts.parser()
-//                .verifyWith(getSigningKey())
-//                .build()
-//                .parseSignedClaims(token)
-//                .getPayload();
-//        return claims.getSubject();
-//    }
-
-    private SecretKey getSigningKey() {
-        byte[] keyBytes = secretKey.getBytes();
-        return Keys.hmacShaKeyFor(keyBytes);
-    }
-
     // TODO Add password character restriction and validation
 
 }
