@@ -65,12 +65,6 @@ public class AuthenticationServiceImpl implements AuthenticationServiceDef {
     }
 
     @Override
-    public UserDetails validateToken(String token) {
-        String username = jwtService.extractUsername(token);
-        return userDetailsService.loadUserByUsername(username);
-    }
-
-    @Override
     public void register(RegistrationRequest registrationRequest) {
         registrationRequest.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
         if (userRepository.findByEmail(registrationRequest.getEmail()).isPresent()) {
