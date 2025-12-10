@@ -1,15 +1,17 @@
 package com.fredande.rewardsappbackend.controller;
 
+import com.fredande.rewardsappbackend.CustomUserDetails;
+import com.fredande.rewardsappbackend.dto.TaskCreationRequest;
 import com.fredande.rewardsappbackend.dto.TaskSavedResponse;
 import com.fredande.rewardsappbackend.model.Task;
 import com.fredande.rewardsappbackend.service.TaskService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -27,8 +29,8 @@ public class TaskController {
     }
 
     @PostMapping
-    public ResponseEntity<TaskSavedResponse> create(@RequestBody @Valid Task task) {
-        TaskSavedResponse savedTask = taskService.create(task);
+    public ResponseEntity<TaskSavedResponse> create(@RequestBody @Valid TaskCreationRequest taskCreationRequest, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        TaskSavedResponse savedTask = taskService.create(taskCreationRequest, userDetails);
         return new ResponseEntity<>(savedTask, HttpStatus.CREATED);
     }
 
