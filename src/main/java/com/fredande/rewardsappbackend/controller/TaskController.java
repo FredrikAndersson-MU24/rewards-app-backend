@@ -2,11 +2,12 @@ package com.fredande.rewardsappbackend.controller;
 
 import com.fredande.rewardsappbackend.CustomUserDetails;
 import com.fredande.rewardsappbackend.dto.TaskCreationRequest;
+import com.fredande.rewardsappbackend.dto.TaskReadResponse;
 import com.fredande.rewardsappbackend.dto.TaskSavedResponse;
-import com.fredande.rewardsappbackend.model.Task;
+import com.fredande.rewardsappbackend.dto.TaskUpdateRequest;
 import com.fredande.rewardsappbackend.service.TaskService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +25,8 @@ public class TaskController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Task>> hello(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        return ResponseEntity.ok(taskService.getTasksByUser(userDetails));
+    public ResponseEntity<List<TaskReadResponse>> getAllTasksByUser(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        return ResponseEntity.status(200).body(taskService.getAllTasksByUser(userDetails));
     }
 
     @GetMapping("/{id}")
@@ -35,9 +36,9 @@ public class TaskController {
     }
 
     @PostMapping
-    public ResponseEntity<TaskSavedResponse> create(@RequestBody @Valid TaskCreationRequest taskCreationRequest, @AuthenticationPrincipal CustomUserDetails userDetails) {
-        TaskSavedResponse savedTask = taskService.create(taskCreationRequest, userDetails);
-        return new ResponseEntity<>(savedTask, HttpStatus.CREATED);
+    public ResponseEntity<TaskSavedResponse> create(@RequestBody @Valid TaskCreationRequest taskCreationRequest,
+                                                    @AuthenticationPrincipal CustomUserDetails userDetails) {
+        return ResponseEntity.status(201).body(taskService.create(taskCreationRequest, userDetails));
     }
 
     @PutMapping("/{id}")
