@@ -40,5 +40,12 @@ public class TaskController {
         return new ResponseEntity<>(savedTask, HttpStatus.CREATED);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<TaskSavedResponse> update(@PathVariable Integer id,
+                                                    @RequestBody @Valid TaskUpdateRequest updatedTask,
+                                                    @AuthenticationPrincipal CustomUserDetails userDetails) throws BadRequestException {
+        return ResponseEntity.status(201).body(taskService.update(id, userDetails, updatedTask));
+    }
+
 
 }
