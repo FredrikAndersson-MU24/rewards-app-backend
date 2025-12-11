@@ -72,4 +72,13 @@ public class TaskService {
         return TaskMapper.INSTANCE.taskToTaskSavedResponse(savedTask);
     }
 
+    public TaskReadResponse getTaskByIdAndUser(Integer id, CustomUserDetails userDetails) throws BadRequestException {
+        User user = userRepository.findById(userDetails.getId()).orElseThrow();
+        Task savedTask = taskRepository.findByIdAndUser(id, user).orElse(null);
+        if (savedTask == null) {
+            throw new BadRequestException("User-task mismatch");
+        }
+        return TaskMapper.INSTANCE.taskToTaskReadResponse(savedTask);
+    }
+
 }
