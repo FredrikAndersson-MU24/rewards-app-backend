@@ -22,7 +22,7 @@ public class Task {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    private boolean isDone;
+    private boolean done;
 
     public User getUser() {
         return user;
@@ -33,7 +33,7 @@ public class Task {
     }
 
     public Task() {
-        this.isDone = false;
+        this.done = false;
     }
 
     public Integer getId() {
@@ -85,11 +85,11 @@ public class Task {
     }
 
     public boolean isDone() {
-        return isDone;
+        return done;
     }
 
     public void setDone(boolean done) {
-        isDone = done;
+        this.done = done;
     }
 
 }
