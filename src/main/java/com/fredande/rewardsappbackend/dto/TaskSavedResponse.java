@@ -2,15 +2,12 @@ package com.fredande.rewardsappbackend.dto;
 
 import org.springframework.web.util.HtmlUtils;
 
-public class TaskSavedResponse {
+public record TaskSavedResponse(String title, String description, Integer points) {
 
-    private final String title;
-    private final String description;
-
-
-    public TaskSavedResponse(String title, String description) {
+    public TaskSavedResponse(String title, String description, Integer points) {
         this.title = HtmlUtils.htmlEscape(title);
         this.description = HtmlUtils.htmlEscape(description);
+        this.points = points;
     }
 
 }
