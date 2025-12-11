@@ -28,6 +28,12 @@ public class TaskController {
         return ResponseEntity.ok(taskService.getTasksByUser(userDetails));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<TaskReadResponse> getTaskByIdAndUser(@PathVariable Integer id,
+                                                               @AuthenticationPrincipal CustomUserDetails userDetails) throws BadRequestException {
+        return ResponseEntity.status(200).body(taskService.getTaskByIdAndUser(id, userDetails));
+    }
+
     @PostMapping
     public ResponseEntity<TaskSavedResponse> create(@RequestBody @Valid TaskCreationRequest taskCreationRequest, @AuthenticationPrincipal CustomUserDetails userDetails) {
         TaskSavedResponse savedTask = taskService.create(taskCreationRequest, userDetails);
