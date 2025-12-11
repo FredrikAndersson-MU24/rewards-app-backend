@@ -1,6 +1,7 @@
 package com.fredande.rewardsappbackend.exceptionhandler;
 
 import jakarta.persistence.EntityExistsException;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -23,6 +24,11 @@ public class CustomExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
         return ResponseEntity.status(400).body(exception.getFieldError().getDefaultMessage());
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<String> handleBadRequestException(BadRequestException exception) {
+        return ResponseEntity.status(400).body(exception.getMessage());
     }
 
 }
