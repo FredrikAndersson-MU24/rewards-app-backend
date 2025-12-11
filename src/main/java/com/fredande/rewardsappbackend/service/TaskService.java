@@ -2,14 +2,20 @@ package com.fredande.rewardsappbackend.service;
 
 import com.fredande.rewardsappbackend.CustomUserDetails;
 import com.fredande.rewardsappbackend.dto.TaskCreationRequest;
+import com.fredande.rewardsappbackend.dto.TaskReadResponse;
 import com.fredande.rewardsappbackend.dto.TaskSavedResponse;
+import com.fredande.rewardsappbackend.dto.TaskUpdateRequest;
+import com.fredande.rewardsappbackend.mapper.TaskMapper;
 import com.fredande.rewardsappbackend.model.Task;
 import com.fredande.rewardsappbackend.model.User;
 import com.fredande.rewardsappbackend.repository.TaskRepository;
 import com.fredande.rewardsappbackend.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
+import org.apache.coyote.BadRequestException;
 import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -26,20 +32,20 @@ public class TaskService {
     public TaskSavedResponse create(TaskCreationRequest taskCreationRequest, CustomUserDetails userDetails) {
         User user = new User();
         user.setId(userDetails.getId());
-        TaskSavedResponse taskSavedResponse = new TaskSavedResponse(taskCreationRequest.getTitle(), taskCreationRequest.getDescription());
         Task task = new Task();
-        task.setTitle(taskCreationRequest.getTitle());
-        task.setDescription(taskCreationRequest.getDescription());
-        task.setPoints(taskCreationRequest.getPoints());
+        task.setTitle(taskCreationRequest.title());
+        task.setDescription(taskCreationRequest.description());
+        task.setPoints(taskCreationRequest.points());
         task.setUser(user);
         taskRepository.save(task);
-        return taskSavedResponse;
+        return TaskMapper.INSTANCE.taskToTaskSavedResponse(task);
     }
 
-    public @Nullable List<Task> getTasksByUser(CustomUserDetails userDetails) {
-        User user = userRepository.findById(userDetails.getId()).orElseThrow();
-        List<Task> tasks = taskRepository.findByUser(user).orElse(null);
-        return tasks;
+    public @Nullable List<TaskReadResponse> getAllTasksByUser(CustomUserDetails userDetails) {
+        return taskRepository.findByUser(userRepository.findById(userDetails.getId()).orElseThrow())
+                .stream()
+                .map(TaskMapper.INSTANCE::taskToTaskReadResponse)
+                .toList();
     }
 
     public TaskSavedResponse update(Integer id, CustomUserDetails userDetails, TaskUpdateRequest updatedTask) throws BadRequestException {
