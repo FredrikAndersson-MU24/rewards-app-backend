@@ -1,0 +1,41 @@
+name: Workflow to run tests on pull request to main, with a Docker image MYSQL database
+on: push
+#  pull_request:
+#    branches:
+#      - main
+jobs:
+  build-with-docker:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          DB_TEST_URL: {{secrets.DB_URL}}
+          DB_USERNAME: {{secrets.DB_USERNAME}}
+          DB_PASSWORD: {{secrets.DB_PASSWORD}}
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup Java 21
+        uses: actions/java-setup@v5
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+      - name: Wait for MySQL image
+        run: |
+          echo "Waiting for MySQL image..."
+          for i in {1..30}; do
+          nc -z localhost 3306 && echo "MySQL image is ready and running!" && break
+          sleep 2
+          done
+      - name: Build and test with Maven
+        run: mvn build verify
