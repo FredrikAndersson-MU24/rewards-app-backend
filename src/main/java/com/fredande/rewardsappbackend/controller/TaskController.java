@@ -7,7 +7,6 @@ import com.fredande.rewardsappbackend.dto.TaskSavedResponse;
 import com.fredande.rewardsappbackend.dto.TaskUpdateRequest;
 import com.fredande.rewardsappbackend.service.TaskService;
 import jakarta.validation.Valid;
-import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +30,7 @@ public class TaskController {
 
     @GetMapping("/{id}")
     public ResponseEntity<TaskReadResponse> getTaskByIdAndUser(@PathVariable Integer id,
-                                                               @AuthenticationPrincipal CustomUserDetails userDetails) throws BadRequestException {
+                                                               @AuthenticationPrincipal CustomUserDetails userDetails) {
         return ResponseEntity.status(200).body(taskService.getTaskByIdAndUser(id, userDetails));
     }
 
@@ -44,7 +43,7 @@ public class TaskController {
     @PutMapping("/{id}")
     public ResponseEntity<TaskSavedResponse> update(@PathVariable Integer id,
                                                     @RequestBody @Valid TaskUpdateRequest updatedTask,
-                                                    @AuthenticationPrincipal CustomUserDetails userDetails) throws BadRequestException {
+                                                    @AuthenticationPrincipal CustomUserDetails userDetails) {
         return ResponseEntity.status(201).body(taskService.update(id, userDetails, updatedTask));
     }
 
