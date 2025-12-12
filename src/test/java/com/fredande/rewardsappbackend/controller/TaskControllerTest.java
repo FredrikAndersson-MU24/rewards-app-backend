@@ -49,11 +49,6 @@ class TaskControllerTest {
         String description = "Here is the description";
         Integer points = 10;
         User user = new User();
-        Task task = new Task();
-        task.setTitle(title);
-        task.setDescription(description);
-        task.setPoints(points);
-        task.setUser(user);
         CustomUserDetails userDetails = new CustomUserDetails(user);
         TaskCreationRequest request = new TaskCreationRequest(title, description, points);
         Authentication authentication = new UsernamePasswordAuthenticationToken(
