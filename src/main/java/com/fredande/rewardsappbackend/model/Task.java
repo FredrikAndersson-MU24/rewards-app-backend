@@ -1,6 +1,7 @@
 package com.fredande.rewardsappbackend.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
@@ -13,8 +14,14 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     //    private Integer userId;
+    @NotBlank
+    @Size(min = 8, max = 140, message = "Title must be 8-40 characters.")
     private String title;
+    @NotBlank
+    @Size(min = 8, max = 255, message = "Description must be 8-255 characters.")
     private String description;
+    @NotNull
+    @Min(0)
     private Integer points;
     @CreationTimestamp
     private Date created;
@@ -24,16 +31,17 @@ public class Task {
     private User user;
     private boolean done;
 
+    public Task() {
+        this.done = false;
+        this.points = 0;
+    }
+
     public User getUser() {
         return user;
     }
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public Task() {
-        this.done = false;
     }
 
     public Integer getId() {
