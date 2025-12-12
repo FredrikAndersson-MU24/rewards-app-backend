@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @RestControllerAdvice
 public class CustomExceptionHandler {
@@ -27,7 +28,7 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
-        return ResponseEntity.status(400).body(exception.getFieldError().getDefaultMessage());
+        return ResponseEntity.status(400).body(Objects.requireNonNull(exception.getFieldError()).getDefaultMessage());
     }
 
     @ExceptionHandler(BadRequestException.class)
