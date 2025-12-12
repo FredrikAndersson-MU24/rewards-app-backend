@@ -1,11 +1,11 @@
 package com.fredande.rewardsappbackend.service;
 
 import com.fredande.rewardsappbackend.CustomUserDetailsService;
+import com.fredande.rewardsappbackend.JWTService;
 import com.fredande.rewardsappbackend.dto.RegistrationRequest;
 import com.fredande.rewardsappbackend.model.User;
 import com.fredande.rewardsappbackend.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import jakarta.persistence.EntityExistsException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,7 +16,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,16 +26,16 @@ public class AuthenticationServiceImpl implements AuthenticationServiceDef {
 
     private final AuthenticationManager authenticationManager;
     private final CustomUserDetailsService userDetailsService;
-    @Value("${jwt.secret}")
-    private String secretKey;
+    private final JWTService jwtService;
     @Value("${jwt.expiration.ms:900000}")
     private Long expirationTime;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthenticationServiceImpl(AuthenticationManager authenticationManager, CustomUserDetailsService userDetailsService, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public AuthenticationServiceImpl(AuthenticationManager authenticationManager, CustomUserDetailsService userDetailsService, JWTService jwtService, UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
+        this.jwtService = jwtService;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -61,15 +60,9 @@ public class AuthenticationServiceImpl implements AuthenticationServiceDef {
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expirationTime))
-                .signWith(getSigningKey())
+                .signWith(jwtService.getSigningKey())
                 .compact();
     }
-
-//    @Override
-//    public UserDetails validateToken(String token) {
-//        String username = extractUsername(token);
-//        return userDetailsService.loadUserByUsername(username);
-//    }
 
     @Override
     public void register(RegistrationRequest registrationRequest) {
@@ -81,20 +74,6 @@ public class AuthenticationServiceImpl implements AuthenticationServiceDef {
         user.setPassword(registrationRequest.getPassword());
         user.setEmail(registrationRequest.getEmail());
         userRepository.save(user);
-    }
-
-//    private String extractUsername(String token) {
-//        Claims claims = Jwts.parser()
-//                .verifyWith(getSigningKey())
-//                .build()
-//                .parseSignedClaims(token)
-//                .getPayload();
-//        return claims.getSubject();
-//    }
-
-    private SecretKey getSigningKey() {
-        byte[] keyBytes = secretKey.getBytes();
-        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     // TODO Add password character restriction and validation

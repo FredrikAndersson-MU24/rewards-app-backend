@@ -54,4 +54,8 @@ public class CustomUserDetails implements UserDetails {
         return UserDetails.super.isEnabled();
     }
 
+    public Integer getId() {
+        return user.getId();
+    }
+
 }
