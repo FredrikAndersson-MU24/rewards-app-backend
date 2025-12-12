@@ -23,6 +23,18 @@ public class TaskController {
         this.taskService = taskService;
     }
 
+
+    // CREATE
+
+    @PostMapping
+    public ResponseEntity<TaskSavedResponse> create(@RequestBody @Valid TaskCreationRequest taskCreationRequest,
+                                                    @AuthenticationPrincipal CustomUserDetails userDetails) {
+        return ResponseEntity.status(201).body(taskService.create(taskCreationRequest, userDetails));
+    }
+
+
+    // READ
+
     @GetMapping
     public ResponseEntity<List<TaskReadResponse>> getAllTasksByUser(@AuthenticationPrincipal CustomUserDetails userDetails) {
         return ResponseEntity.status(200).body(taskService.getAllTasksByUser(userDetails));
@@ -34,11 +46,8 @@ public class TaskController {
         return ResponseEntity.status(200).body(taskService.getTaskByIdAndUser(id, userDetails));
     }
 
-    @PostMapping
-    public ResponseEntity<TaskSavedResponse> create(@RequestBody @Valid TaskCreationRequest taskCreationRequest,
-                                                    @AuthenticationPrincipal CustomUserDetails userDetails) {
-        return ResponseEntity.status(201).body(taskService.create(taskCreationRequest, userDetails));
-    }
+
+    // UPDATE
 
     @PutMapping("/{id}")
     public ResponseEntity<TaskSavedResponse> update(@PathVariable Integer id,
@@ -46,6 +55,5 @@ public class TaskController {
                                                     @AuthenticationPrincipal CustomUserDetails userDetails) {
         return ResponseEntity.status(201).body(taskService.update(id, userDetails, updatedTask));
     }
-
 
 }
