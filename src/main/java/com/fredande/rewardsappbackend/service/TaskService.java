@@ -11,7 +11,6 @@ import com.fredande.rewardsappbackend.model.User;
 import com.fredande.rewardsappbackend.repository.TaskRepository;
 import com.fredande.rewardsappbackend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.apache.coyote.BadRequestException;
 import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
@@ -48,12 +47,12 @@ public class TaskService {
                 .toList();
     }
 
-    public TaskSavedResponse update(Integer id, CustomUserDetails userDetails, TaskUpdateRequest updatedTask) throws BadRequestException {
+    public TaskSavedResponse update(Integer id, CustomUserDetails userDetails, TaskUpdateRequest updatedTask) {
         Task savedTask = taskRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         User user = userRepository.findById(userDetails.getId()).orElseThrow(EntityNotFoundException::new);
         boolean updated = false;
         if (!savedTask.getUser().equals(user)) {
-            throw new BadRequestException("Task-user mismatch");
+            throw new EntityNotFoundException("Task-user mismatch");
         }
         if (!savedTask.getTitle().equals(updatedTask.title())) {
             savedTask.setTitle(updatedTask.title());
@@ -78,11 +77,11 @@ public class TaskService {
         return TaskMapper.INSTANCE.taskToTaskSavedResponse(savedTask);
     }
 
-    public TaskReadResponse getTaskByIdAndUser(Integer id, CustomUserDetails userDetails) throws BadRequestException {
+    public TaskReadResponse getTaskByIdAndUser(Integer id, CustomUserDetails userDetails) {
         User user = userRepository.findById(userDetails.getId()).orElseThrow();
         Task savedTask = taskRepository.findByIdAndUser(id, user).orElse(null);
         if (savedTask == null) {
-            throw new BadRequestException("User-task mismatch");
+            throw new EntityNotFoundException("User-task mismatch");
         }
         return TaskMapper.INSTANCE.taskToTaskReadResponse(savedTask);
     }
