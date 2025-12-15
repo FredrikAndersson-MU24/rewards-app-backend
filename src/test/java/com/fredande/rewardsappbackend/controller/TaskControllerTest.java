@@ -611,6 +611,7 @@ class TaskControllerTest {
                 request,
                 AuthResponse.class);
 
+        assert response.getBody() != null;
         return response.getBody().getToken();
     }
 
