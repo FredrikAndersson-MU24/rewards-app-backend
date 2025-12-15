@@ -49,10 +49,10 @@ public class TaskController {
 
     // UPDATE
 
-    @PutMapping("/{id}")
-    public ResponseEntity<TaskSavedResponse> update(@PathVariable Integer id,
-                                                    @RequestBody @Valid TaskUpdateRequest updatedTask,
-                                                    @AuthenticationPrincipal CustomUserDetails userDetails) {
+    @PatchMapping("/{id}")
+    public ResponseEntity<TaskReadResponse> update(@PathVariable Integer id,
+                                                   @RequestBody @Valid TaskUpdateRequest updatedTask,
+                                                   @AuthenticationPrincipal CustomUserDetails userDetails) {
         return ResponseEntity.status(201).body(taskService.update(id, userDetails, updatedTask));
     }
 
