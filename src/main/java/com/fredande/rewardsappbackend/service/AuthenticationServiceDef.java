@@ -9,7 +9,6 @@ public interface AuthenticationServiceDef {
 
     String generateToken(UserDetails userDetails);
 
-    //    UserDetails validateToken(String token);
     void register(RegistrationRequest registrationRequest);
 
 }
