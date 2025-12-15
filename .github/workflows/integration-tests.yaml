@@ -1,8 +1,8 @@
 name: Workflow to run tests on pull request to main, with a Docker image MYSQL database
-on: push
-#  pull_request:
-#    branches:
-#      - main
+on:
+  pull_request:
+    branches:
+      - main
 jobs:
   build-with-docker:
     runs-on: ubuntu-latest
