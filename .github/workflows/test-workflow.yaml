@@ -26,8 +26,8 @@ jobs:
     env:
       SPRING_PROFILES_ACTIVE: test
       DB_TEST_URL: jdbc:mysql://127.0.0.1:3306/rewards_app_test
-      DB_USER: ${{ secrets.DB_USER }}
-      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_USER: test_user
+      DB_PASSWORD: test_password
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
       JWT_EXPIRES_IN: "3600000"
 
