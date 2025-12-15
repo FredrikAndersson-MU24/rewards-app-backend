@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @AutoConfigureTestRestTemplate
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class TaskControllerTest {
+class TaskControllerIT {
 
     private final String VALID_TITLE = "This is the title";
     private final String VALID_DESCRIPTION = "Here is the description";
