@@ -47,26 +47,26 @@ public class TaskService {
                 .toList();
     }
 
-    public TaskSavedResponse update(Integer id, CustomUserDetails userDetails, TaskUpdateRequest updatedTask) {
+    public TaskReadResponse update(Integer id, CustomUserDetails userDetails, TaskUpdateRequest updatedTask) {
         Task savedTask = taskRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         User user = userRepository.findById(userDetails.getId()).orElseThrow(EntityNotFoundException::new);
         boolean updated = false;
         if (!savedTask.getUser().equals(user)) {
             throw new EntityNotFoundException("Task-user mismatch");
         }
-        if (!savedTask.getTitle().equals(updatedTask.title())) {
+        if (updatedTask.title() != null && !savedTask.getTitle().equals(updatedTask.title())) {
             savedTask.setTitle(updatedTask.title());
             updated = true;
         }
-        if (!savedTask.getDescription().equals(updatedTask.description())) {
+        if (updatedTask.description() != null && !savedTask.getDescription().equals(updatedTask.description())) {
             updated = true;
             savedTask.setDescription(updatedTask.description());
         }
-        if (!savedTask.getPoints().equals(updatedTask.points())) {
+        if (updatedTask.points() != null && !savedTask.getPoints().equals(updatedTask.points())) {
             updated = true;
             savedTask.setPoints(updatedTask.points());
         }
-        if (savedTask.isDone() != (updatedTask.done())) {
+        if (updatedTask.done() != null && savedTask.isDone() != (updatedTask.done())) {
             updated = true;
             savedTask.setDone(updatedTask.done());
         }
@@ -74,7 +74,7 @@ public class TaskService {
             savedTask.setUpdated(new Date());
         }
         taskRepository.save(savedTask);
-        return TaskMapper.INSTANCE.taskToTaskSavedResponse(savedTask);
+        return TaskMapper.INSTANCE.taskToTaskReadResponse(savedTask);
     }
 
     public TaskReadResponse getTaskByIdAndUser(Integer id, CustomUserDetails userDetails) {

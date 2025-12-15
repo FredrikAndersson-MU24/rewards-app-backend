@@ -125,7 +125,7 @@ class TaskServiceTest {
         var response = taskService.update(1, userDetails, request);
 
         //Assert
-        assertInstanceOf(TaskSavedResponse.class, response);
+        assertInstanceOf(TaskReadResponse.class, response);
         assertEquals(updated_title, response.title());
         assertEquals(updated_description, response.description());
         assertEquals(updated_points, response.points());
