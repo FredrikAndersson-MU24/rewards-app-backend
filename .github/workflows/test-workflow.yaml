@@ -39,4 +39,4 @@ jobs:
           sleep 2
           done
       - name: Build and test with Maven
-        run: mvn build verify
+        run: mvn clean verify
