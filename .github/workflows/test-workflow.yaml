@@ -1,8 +1,8 @@
 name: Workflow to run tests on pull request to main, with a Docker image MYSQL database
-on:
-  pull_request:
-    branches:
-      - main
+on: push
+#  pull_request:
+#    branches:
+#      - main
 jobs:
   build-with-docker:
     runs-on: ubuntu-latest
@@ -11,9 +11,9 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
-          DB_TEST_URL: {{secrets.DB_URL}}
-          DB_USERNAME: {{secrets.DB_USERNAME}}
-          DB_PASSWORD: {{secrets.DB_PASSWORD}}
+          MYSQL_DATABASE: {{secrets.DB_URL}}
+          MYSQL_USER: {{secrets.DB_USERNAME}}
+          MYSQL_PASSWORD: {{secrets.DB_PASSWORD}}
         ports:
           - 3306:3306
         options: >-
