@@ -1,18 +1,25 @@
 package com.fredande.rewardsappbackend.service;
 
+import com.fredande.rewardsappbackend.CustomUserDetails;
+import com.fredande.rewardsappbackend.dto.UserResponse;
+import com.fredande.rewardsappbackend.mapper.UserMapper;
+import com.fredande.rewardsappbackend.model.Task;
 import com.fredande.rewardsappbackend.model.User;
 import com.fredande.rewardsappbackend.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.internal.matchers.InstanceOf;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -34,7 +41,7 @@ class UserServiceTest {
         user.setId(1);
         user.setCurrentPoints(10);
         user.setTotalPoints(20);
-        when(userRepository.findById(any())).thenReturn(Optional.of(user));
+        when(userRepository.findById(any(Integer.class))).thenReturn(Optional.of(user));
 
         // Act
         userService.updatePoints(1, 10, true);
@@ -44,6 +51,7 @@ class UserServiceTest {
         assert updatedUser != null;
         assertEquals(30, updatedUser.getTotalPoints());
         assertEquals(20, updatedUser.getCurrentPoints());
+        verify(userRepository, times(2)).findById(any(Integer.class));
 
     }
 
@@ -58,7 +66,7 @@ class UserServiceTest {
         user.setId(1);
         user.setCurrentPoints(10);
         user.setTotalPoints(20);
-        when(userRepository.findById(any())).thenReturn(Optional.of(user));
+        when(userRepository.findById(any(Integer.class))).thenReturn(Optional.of(user));
 
         // Act
         userService.updatePoints(1, 10, false);
@@ -68,6 +76,36 @@ class UserServiceTest {
         assert updatedUser != null;
         assertEquals(10, updatedUser.getTotalPoints());
         assertEquals(0, updatedUser.getCurrentPoints());
+        verify(userRepository, times(2)).findById(any(Integer.class));
+
+    }
+
+    @Test
+    void get_valid() {
+        // Arrange
+        User user = new User();
+        user.setId(1);
+        List<Task> tasks = new ArrayList<>();
+        Task task1 = new Task();
+        Task task2 = new Task();
+        task1.setUser(user);
+        task1.setDone(false);
+        task2.setUser(user);
+        task2.setDone(true);
+        tasks.add(task1);
+        tasks.add(task2);
+        user.setTasks(tasks);
+        CustomUserDetails userDetails = new CustomUserDetails(user);
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+
+        // Act
+        var response = userService.getUserById(user.getId(), userDetails);
+
+        // Assert
+        assertEquals(1, response.numTasksCompleted());
+        assertEquals(1, response.numTasksOpen());
+        assertEquals(2, response.numTasksTotal());
+        verify(userRepository, times(1)).findById(any(Integer.class));
 
     }
 
