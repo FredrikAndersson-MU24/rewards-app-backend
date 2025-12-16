@@ -22,10 +22,12 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
 
-    public TaskService(TaskRepository taskRepository, UserRepository userRepository) {
+    public TaskService(TaskRepository taskRepository, UserRepository userRepository, UserService userService) {
         this.taskRepository = taskRepository;
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     public TaskSavedResponse create(TaskCreationRequest taskCreationRequest, CustomUserDetails userDetails) {
@@ -69,6 +71,7 @@ public class TaskService {
         if (updatedTask.done() != null && savedTask.isDone() != (updatedTask.done())) {
             updated = true;
             savedTask.setDone(updatedTask.done());
+            userService.updatePoints(user.getId(), savedTask.getPoints(), updatedTask.done());
         }
         if (updated) {
             savedTask.setUpdated(new Date());
