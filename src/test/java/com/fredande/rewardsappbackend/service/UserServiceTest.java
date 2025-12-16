@@ -1,8 +1,6 @@
 package com.fredande.rewardsappbackend.service;
 
 import com.fredande.rewardsappbackend.CustomUserDetails;
-import com.fredande.rewardsappbackend.dto.UserResponse;
-import com.fredande.rewardsappbackend.mapper.UserMapper;
 import com.fredande.rewardsappbackend.model.Task;
 import com.fredande.rewardsappbackend.model.User;
 import com.fredande.rewardsappbackend.repository.UserRepository;
@@ -10,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.internal.matchers.InstanceOf;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
