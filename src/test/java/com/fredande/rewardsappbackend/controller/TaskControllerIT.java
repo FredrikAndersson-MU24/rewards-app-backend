@@ -58,12 +58,6 @@ class TaskControllerIT {
     MockMvc mvc;
 
     @Autowired
-    TaskRepository taskRepository;
-
-    @Autowired
-    TaskService taskService;
-
-    @Autowired
     ObjectMapper objectMapper;
 
     @BeforeAll

@@ -41,18 +41,6 @@ class UserControllerIT {
     private Integer port;
 
     @Autowired
-    MockMvc mvc;
-
-    @Autowired
-    TaskRepository taskRepository;
-
-    @Autowired
-    TaskService taskService;
-
-    @Autowired
-    ObjectMapper objectMapper;
-
-    @Autowired
     UserRepository userRepository;
 
     @BeforeAll
@@ -119,5 +107,5 @@ class UserControllerIT {
         assertEquals(401, response.getStatusCode().value());
 
     }
-    
+
 }

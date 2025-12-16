@@ -12,7 +12,7 @@ public class TestUtils {
     public static String getToken(TestRestTemplate testRestTemplate, Integer port, String email, String password) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> request = new HttpEntity<String>(
+        HttpEntity<String> request = new HttpEntity<>(
                 String.format("{\"email\": \"%s\", \"password\": \"%s\"}", email, password), headers
         );
         ResponseEntity<AuthResponse> response = testRestTemplate.postForEntity("http://localhost:" + port + "/api/auth/login",
@@ -26,7 +26,7 @@ public class TestUtils {
     public static void registerUser(TestRestTemplate testRestTemplate, Integer port, String email, String password) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> request = new HttpEntity<String>(
+        HttpEntity<String> request = new HttpEntity<>(
                 String.format("{\"email\": \"%s\", \"password\": \"%s\"}", email, password), headers
         );
         testRestTemplate.postForEntity("http://localhost:" + port + "/api/auth/register",
