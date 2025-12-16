@@ -2,9 +2,7 @@ package com.fredande.rewardsappbackend.controller;
 
 import com.fredande.rewardsappbackend.dto.UserResponse;
 import com.fredande.rewardsappbackend.model.User;
-import com.fredande.rewardsappbackend.repository.TaskRepository;
 import com.fredande.rewardsappbackend.repository.UserRepository;
-import com.fredande.rewardsappbackend.service.TaskService;
 import com.fredande.rewardsappbackend.testUtils.TestUtils;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeAll;
@@ -18,8 +16,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
-import tools.jackson.databind.ObjectMapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
