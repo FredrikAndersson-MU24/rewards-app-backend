@@ -3,8 +3,6 @@ package com.fredande.rewardsappbackend.mapper;
 import com.fredande.rewardsappbackend.dto.UserResponse;
 import com.fredande.rewardsappbackend.model.Task;
 import com.fredande.rewardsappbackend.model.User;
-import com.fredande.rewardsappbackend.repository.UserRepository;
-import com.fredande.rewardsappbackend.service.UserService;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
