@@ -5,6 +5,7 @@ import com.fredande.rewardsappbackend.dto.*;
 import com.fredande.rewardsappbackend.model.User;
 import com.fredande.rewardsappbackend.repository.TaskRepository;
 import com.fredande.rewardsappbackend.service.TaskService;
+import com.fredande.rewardsappbackend.testUtils.TestUtils;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -67,7 +68,7 @@ class TaskControllerIT {
 
     @BeforeAll
     void beforeAll() {
-        registerUser(VALID_EMAIL, VALID_PASSWORD); // Create a user in the database, to use in the tests
+        TestUtils.registerUser(testRestTemplate, port, VALID_EMAIL, VALID_PASSWORD); // Create a user in the database, to use in the tests
     }
 
     // With JWT token generation and validation
@@ -80,7 +81,7 @@ class TaskControllerIT {
     @Test
     void withValidJWT_create_valid() {
         // Arrange
-        String token = getToken(VALID_EMAIL, VALID_PASSWORD);
+        String token = TestUtils.getToken(testRestTemplate, port, VALID_EMAIL, VALID_PASSWORD);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -113,7 +114,7 @@ class TaskControllerIT {
     @Test
     void withValidJWT_get_valid_allTasksByUser_returnsListOfTaskSavedResponse() {
         // Arrange
-        String token = getToken(VALID_EMAIL, VALID_PASSWORD);
+        String token = TestUtils.getToken(testRestTemplate, port, VALID_EMAIL, VALID_PASSWORD);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -165,7 +166,7 @@ class TaskControllerIT {
     @Test
     void withValidJWT_get_valid_taskByIdAndUser_returnsTaskSavedResponse() {
         // Arrange
-        String token = getToken(VALID_EMAIL, VALID_PASSWORD);
+        String token = TestUtils.getToken(testRestTemplate, port, VALID_EMAIL, VALID_PASSWORD);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -211,7 +212,7 @@ class TaskControllerIT {
     @Test
     void withValidJWT_create_invalid_title_empty_throwsBadRequestException() {
         // Arrange
-        String token = getToken(VALID_EMAIL, VALID_PASSWORD);
+        String token = TestUtils.getToken(testRestTemplate, port, VALID_EMAIL, VALID_PASSWORD);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -244,7 +245,7 @@ class TaskControllerIT {
     @Test
     void withValidJWT_create_invalid_points_negative_throwsBadRequestException() {
         // Arrange
-        String token = getToken(VALID_EMAIL, VALID_PASSWORD);
+        String token = TestUtils.getToken(testRestTemplate, port, VALID_EMAIL, VALID_PASSWORD);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -278,7 +279,7 @@ class TaskControllerIT {
     @Test
     void withValidJWT_update_valid_returnsTaskReadResponse() {
         // Arrange
-        String token = getToken(VALID_EMAIL, VALID_PASSWORD);
+        String token = TestUtils.getToken(testRestTemplate, port, VALID_EMAIL, VALID_PASSWORD);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -325,7 +326,7 @@ class TaskControllerIT {
     @Test
     void withValidJWT_update_invalid_points_negativeNumber_throwsBadRequestException() {
         // Arrange
-        String token = getToken(VALID_EMAIL, VALID_PASSWORD);
+        String token = TestUtils.getToken(testRestTemplate, port, VALID_EMAIL, VALID_PASSWORD);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -371,7 +372,7 @@ class TaskControllerIT {
     @Test
     void withValidJWT_update_invalid_title_blank_throwsBadRequestException() {
         // Arrange
-        String token = getToken(VALID_EMAIL, VALID_PASSWORD);
+        String token = TestUtils.getToken(testRestTemplate, port, VALID_EMAIL, VALID_PASSWORD);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -599,31 +600,5 @@ class TaskControllerIT {
                 .andExpect(jsonPath("$.points").value(VALID_POINTS));
     }
 
-    // Helper methods
-
-    private String getToken(String email, String password) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> request = new HttpEntity<>(
-                String.format("{\"email\": \"%s\", \"password\": \"%s\"}", email, password), headers
-        );
-        ResponseEntity<AuthResponse> response = testRestTemplate.postForEntity("http://localhost:" + port + "/api/auth/login",
-                request,
-                AuthResponse.class);
-
-        assert response.getBody() != null;
-        return response.getBody().getToken();
-    }
-
-    private void registerUser(String email, String password) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> request = new HttpEntity<>(
-                String.format("{\"email\": \"%s\", \"password\": \"%s\"}", email, password), headers
-        );
-        testRestTemplate.postForEntity("http://localhost:" + port + "/api/auth/register",
-                request,
-                String.class);
-    }
 
 }
