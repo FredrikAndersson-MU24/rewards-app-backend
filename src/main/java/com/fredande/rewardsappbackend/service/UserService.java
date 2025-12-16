@@ -1,7 +1,11 @@
 package com.fredande.rewardsappbackend.service;
 
+import com.fredande.rewardsappbackend.CustomUserDetails;
+import com.fredande.rewardsappbackend.dto.UserResponse;
+import com.fredande.rewardsappbackend.mapper.UserMapper;
 import com.fredande.rewardsappbackend.model.User;
 import com.fredande.rewardsappbackend.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,5 +28,13 @@ public class UserService {
         }
     }
 
+
+    public UserResponse getUserById(Integer id, CustomUserDetails userDetails) {
+        User user = userRepository.findById(userDetails.getId()).orElseThrow(EntityNotFoundException::new);
+        if (!id.equals(user.getId())) {
+            throw new EntityNotFoundException();
+        }
+        return UserMapper.INSTANCE.userToUserResponse(user);
+    }
 
 }
