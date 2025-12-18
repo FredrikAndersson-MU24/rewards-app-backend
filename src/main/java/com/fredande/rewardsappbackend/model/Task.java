@@ -31,6 +31,7 @@ public class Task {
     @JoinColumn(name = "user_id")
     private User user;
     private boolean done;
+    @Enumerated(EnumType.STRING)
     private TaskStatus status;
 
     public Task() {
