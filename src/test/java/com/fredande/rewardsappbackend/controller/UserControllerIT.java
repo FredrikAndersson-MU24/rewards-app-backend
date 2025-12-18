@@ -59,7 +59,7 @@ class UserControllerIT {
         headers.set("Authorization", "Bearer " + token);
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> request = new HttpEntity<>(headers);
-        User user = userRepository.findUserByEmail(VALID_EMAIL);
+        User user = userRepository.findByEmail(VALID_EMAIL).orElseThrow();
 
         // Act
         ResponseEntity<UserResponse> response =
@@ -89,7 +89,7 @@ class UserControllerIT {
         headers.set("Authorization", "Bearer " + token);
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> request = new HttpEntity<>(headers);
-        User user = userRepository.findUserByEmail(VALID_EMAIL);
+        User user = userRepository.findByEmail(VALID_EMAIL).orElseThrow();
 
         // Act
         ResponseEntity<?> response =
