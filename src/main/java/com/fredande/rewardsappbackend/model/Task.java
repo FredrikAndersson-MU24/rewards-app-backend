@@ -31,6 +31,7 @@ public class Task {
     @JoinColumn(name = "user_id")
     private User user;
     private boolean done;
+    @Enumerated(EnumType.STRING)
     private TaskStatus status;
 
     public Task() {
@@ -81,10 +82,6 @@ public class Task {
 
     public Date getCreated() {
         return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
     }
 
     public Date getUpdated() {

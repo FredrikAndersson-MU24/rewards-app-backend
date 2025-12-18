@@ -43,7 +43,7 @@ class TaskServiceTest {
      * A valid user and TaskCreationRequest should return DTO of TaskSavedResponse
      */
     @Test
-    void create_valid() {
+    void create_TaskOnParent_valid() {
         // Arrange
         String title = "This is the title";
         String description = "Here is the description";
@@ -54,7 +54,7 @@ class TaskServiceTest {
         TaskCreationRequest request = new TaskCreationRequest(title, description, points);
 
         // Act
-        var response = taskService.create(request, userDetails);
+        var response = taskService.createTaskOnParent(request, userDetails);
 
         //Assert
         assertInstanceOf(TaskSavedResponse.class, response);
