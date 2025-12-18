@@ -12,6 +12,7 @@ import com.fredande.rewardsappbackend.repository.TaskRepository;
 import com.fredande.rewardsappbackend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.jspecify.annotations.Nullable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -30,7 +31,7 @@ public class TaskService {
         this.userService = userService;
     }
 
-    public TaskSavedResponse create(TaskCreationRequest taskCreationRequest, CustomUserDetails userDetails) {
+    public TaskSavedResponse createTaskOnParent(TaskCreationRequest taskCreationRequest, CustomUserDetails userDetails) {
         User user = new User();
         user.setId(userDetails.getId());
         Task task = new Task();
@@ -38,6 +39,24 @@ public class TaskService {
         task.setDescription(taskCreationRequest.description());
         task.setPoints(taskCreationRequest.points());
         task.setUser(user);
+        taskRepository.save(task);
+        return TaskMapper.INSTANCE.taskToTaskSavedResponse(task);
+    }
+
+    @PreAuthorize("hasAuthority('PARENT')")
+    public TaskSavedResponse createTaskOnChildByChildId(TaskCreationRequest taskCreationRequest,
+                                                        CustomUserDetails userDetails,
+                                                        Integer childId) {
+        User child = userRepository.findById(childId).orElseThrow(EntityNotFoundException::new);
+        User parent = userRepository.findById(userDetails.getId()).orElseThrow(EntityNotFoundException::new);
+        if (!child.getParent().equals(parent)) {
+            throw new EntityNotFoundException();
+        }
+        Task task = new Task();
+        task.setTitle(taskCreationRequest.title());
+        task.setDescription(taskCreationRequest.description());
+        task.setPoints(taskCreationRequest.points());
+        task.setUser(child);
         taskRepository.save(task);
         return TaskMapper.INSTANCE.taskToTaskSavedResponse(task);
     }
