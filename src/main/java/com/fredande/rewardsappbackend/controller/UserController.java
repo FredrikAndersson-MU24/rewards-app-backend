@@ -17,6 +17,13 @@ public class UserController {
         this.userService = userService;
     }
 
+    // Create
+    @PostMapping("/add-child")
+    public ResponseEntity<ChildResponse> addChild(@RequestBody @Valid ChildCreationRequest request,
+                                                  @AuthenticationPrincipal CustomUserDetails userDetails) {
+        return ResponseEntity.status(201).body(userService.addChild(request, userDetails));
+    }
+
     @GetMapping("{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable Integer id,
                                                     @AuthenticationPrincipal CustomUserDetails userDetails) {
