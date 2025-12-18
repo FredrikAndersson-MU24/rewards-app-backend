@@ -1,5 +1,6 @@
 package com.fredande.rewardsappbackend.mapper;
 
+import com.fredande.rewardsappbackend.dto.ChildResponse;
 import com.fredande.rewardsappbackend.dto.UserResponse;
 import com.fredande.rewardsappbackend.model.Task;
 import com.fredande.rewardsappbackend.model.User;
@@ -13,6 +14,8 @@ import java.util.List;
 public interface UserMapper {
 
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
+
+    ChildResponse userToChildResponse(User user);
 
     @Mapping(target = "numTasksOpen", expression = "java(getNumOpenTasks(user))")
     @Mapping(target = "numTasksCompleted", expression = "java(getNumCompletedTasks(user))")

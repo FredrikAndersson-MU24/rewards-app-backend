@@ -1,7 +1,7 @@
 package com.fredande.rewardsappbackend.model;
 
+import com.fredande.rewardsappbackend.enums.Role;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 
 import java.util.List;
 
@@ -12,9 +12,6 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(unique = true)
-    @NotNull(message = "Email cannot be null")
-    @Email(message = "Not a valid email address")
     private String email;
     private String password;
     private String firstName;
@@ -23,12 +20,14 @@ public class User {
     private Integer totalPoints;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Task> tasks;
-    private String role;
+    @ManyToOne()
+    private User parent;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     public User() {
         this.currentPoints = 0;
         this.totalPoints = 0;
-        this.role = "ADMIN";
     }
 
     public Integer getId() {
@@ -87,11 +86,11 @@ public class User {
         this.totalPoints = totalPoints;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
@@ -101,6 +100,14 @@ public class User {
 
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    public User getParent() {
+        return parent;
+    }
+
+    public void setParent(User parent) {
+        this.parent = parent;
     }
 
 }

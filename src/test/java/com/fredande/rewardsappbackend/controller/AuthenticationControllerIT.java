@@ -1,6 +1,7 @@
 package com.fredande.rewardsappbackend.controller;
 
 import com.fredande.rewardsappbackend.dto.LoginRequest;
+import com.fredande.rewardsappbackend.enums.Role;
 import com.fredande.rewardsappbackend.model.User;
 import com.fredande.rewardsappbackend.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -81,7 +82,7 @@ class AuthenticationControllerIT {
         User user = new User();
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
-        user.setRole("ADMIN");
+        user.setRole(Role.PARENT);
         userRepository.save(user);
 
         LoginRequest loginRequest = new LoginRequest(badEmail, password);
@@ -110,7 +111,7 @@ class AuthenticationControllerIT {
         User user = new User();
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
-        user.setRole("ADMIN");
+        user.setRole(Role.PARENT);
         userRepository.save(user);
 
         LoginRequest loginRequest = new LoginRequest(email, invalidPassword);
@@ -137,7 +138,7 @@ class AuthenticationControllerIT {
         User user = new User();
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
-        user.setRole("ADMIN");
+        user.setRole(Role.PARENT);
         userRepository.save(user);
 
         LoginRequest loginRequest = new LoginRequest("", password);
@@ -165,7 +166,7 @@ class AuthenticationControllerIT {
         User user = new User();
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
-        user.setRole("ADMIN");
+        user.setRole(Role.PARENT);
         userRepository.save(user);
 
         LoginRequest loginRequest = new LoginRequest(email, "");

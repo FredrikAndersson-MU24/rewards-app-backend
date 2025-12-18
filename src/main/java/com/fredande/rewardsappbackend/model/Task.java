@@ -1,5 +1,6 @@
 package com.fredande.rewardsappbackend.model;
 
+import com.fredande.rewardsappbackend.enums.TaskStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -30,10 +31,12 @@ public class Task {
     @JoinColumn(name = "user_id")
     private User user;
     private boolean done;
+    private TaskStatus status;
 
     public Task() {
         this.done = false;
         this.points = 0;
+        this.status = TaskStatus.ASSIGNED;
     }
 
     public User getUser() {
@@ -98,6 +101,14 @@ public class Task {
 
     public void setDone(boolean done) {
         this.done = done;
+    }
+
+    public TaskStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TaskStatus status) {
+        this.status = status;
     }
 
 }
