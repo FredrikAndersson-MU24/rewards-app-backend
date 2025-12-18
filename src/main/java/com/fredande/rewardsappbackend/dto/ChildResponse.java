@@ -1,0 +1,17 @@
+package com.fredande.rewardsappbackend.dto;
+
+import com.fredande.rewardsappbackend.model.User;
+
+import java.util.List;
+
+public record ChildResponse(Integer id,
+                            String firstName,
+                            String lastName,
+                            Integer currentPoints,
+                            Integer totalPoints,
+                            Integer numTasksOpen,
+                            Integer numTasksCompleted,
+                            Integer numTasksTotal,
+                            List<User> parents) {
+
+}
