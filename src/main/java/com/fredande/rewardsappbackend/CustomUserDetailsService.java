@@ -2,10 +2,15 @@ package com.fredande.rewardsappbackend;
 
 import com.fredande.rewardsappbackend.model.User;
 import com.fredande.rewardsappbackend.repository.UserRepository;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 ///  Define custom behavior for UserDetailsService
 @Service
@@ -30,8 +35,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository
                 .findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-//        List<GrantedAuthority> authorities = new ArrayList<>();
-//        authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
         return new CustomUserDetails(user);
     }
 
