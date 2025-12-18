@@ -29,7 +29,15 @@ public class TaskController {
     @PostMapping
     public ResponseEntity<TaskSavedResponse> create(@RequestBody @Valid TaskCreationRequest taskCreationRequest,
                                                     @AuthenticationPrincipal CustomUserDetails userDetails) {
-        return ResponseEntity.status(201).body(taskService.create(taskCreationRequest, userDetails));
+        return ResponseEntity.status(201).body(taskService.createTaskOnParent(taskCreationRequest, userDetails));
+    }
+
+
+    @PostMapping("/{childId}")
+    public ResponseEntity<TaskSavedResponse> createTaskByChildId(@RequestBody @Valid TaskCreationRequest taskCreationRequest,
+                                                                 @AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                 @PathVariable Integer childId) {
+        return ResponseEntity.status(201).body(taskService.createTaskOnChildByChildId(taskCreationRequest, userDetails, childId));
     }
 
 
