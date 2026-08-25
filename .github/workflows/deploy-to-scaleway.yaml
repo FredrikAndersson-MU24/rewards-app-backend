@@ -51,5 +51,5 @@ jobs:
       - name: Build and push image with Spring Boot buildpacks
         run: |
           ./mvnw clean spring-boot:build-image -DskipTests \
-            -Dspring-boot.build-image.imageName=${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/chorely:${{ steps.version.outputs.version }} \
+            -Dspring-boot.build-image.imageName=${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/chorely \
             -Dspring-boot.build-image.publish=true
