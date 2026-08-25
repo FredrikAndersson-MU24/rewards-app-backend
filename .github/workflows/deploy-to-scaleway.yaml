@@ -33,9 +33,6 @@ jobs:
         working-directory: frontend
         run: npm run build
 
-      - name: Build with Maven
-        run: ./mvnw clean package -DskipTests
-
       - name: Get version
         id: version
         run: |
@@ -50,7 +47,9 @@ jobs:
           username: nologin
           password: ${{ secrets.SCALEWAY_API_KEY }}
           registry: ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}
-      - name: Build the Docker image
-        run: docker build . -t ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/chorely
-      - name: Push the Docker Image
-        run: docker push ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/chorely
+      
+      - name: Build and push image with Spring Boot buildpacks
+        run: |
+          ./mvnw clean spring-boot:build-image -DskipTests \
+            -Dspring-boot.build-image.imageName=${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/chorely:${{ steps.version.outputs.version }} \
+            -Dspring-boot.build-image.publish=true
