@@ -9,7 +9,7 @@
     </parent>
     <groupId>com.fredrikkodar</groupId>
     <artifactId>chorely</artifactId>
-    <version>1.4.0</version>
+    <version>1.4.1-SNAPSHOT</version>
     <name>chorely</name>
     <description>Family task tracking app</description>
     <url/>
