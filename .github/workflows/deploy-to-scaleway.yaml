@@ -5,6 +5,7 @@ on:
 
 jobs:
   deploy:
+    if: needs.release-please.outputs.release_created == 'true'
     runs-on: ubuntu-latest
 
     steps:
