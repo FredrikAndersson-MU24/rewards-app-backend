@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/FredrikKodar/chorely/compare/v1.4.0...v1.5.0) (2026-08-26)
+
+
+### Features
+
+* **cd:** edit to trigger flow ([#56](https://github.com/FredrikKodar/chorely/issues/56)) ([cce929b](https://github.com/FredrikKodar/chorely/commit/cce929bb03ebe863e51c715e2447db66f81dded6))
+
 ## [1.4.0](https://github.com/FredrikKodar/chorely/compare/v1.3.0...v1.4.0) (2026-08-26)
 
 
