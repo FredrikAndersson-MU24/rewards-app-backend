@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/FredrikKodar/chorely/compare/v1.2.2...v1.3.0) (2026-08-26)
+
+
+### Features
+
+* **cd:** setup scaleway workflow ([#46](https://github.com/FredrikKodar/chorely/issues/46)) ([31c8805](https://github.com/FredrikKodar/chorely/commit/31c8805142c0a20be3aa3a22f8988b9ffc33f5eb))
+
 ## [1.2.2](https://github.com/FredrikKodar/chorely/compare/v1.2.1...v1.2.2) (2026-03-26)
 
 
