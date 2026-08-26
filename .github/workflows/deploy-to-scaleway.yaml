@@ -37,12 +37,6 @@ jobs:
         working-directory: frontend
         run: npm run build
 
-      - name: Get version
-        id: version
-        run: |
-          VERSION=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-
       - name: Login to Scaleway Container Registry
         uses: docker/login-action@v3
         with:
@@ -56,5 +50,21 @@ jobs:
             -Dspring-boot.build-image.imageName=${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/chorely:$VERSION \
             -Dspring-boot.build-image.publish=true
 
+          docker tag ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/chorely:$VERSION ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/chorely:latest
+          docker push ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/chorely:latest
+      - name: Build and push image with Spring Boot buildpacks
+        run: |
+          VERSION=$(./mvnw -q help:evaluate -Dexpression=project.version -DforceStdout)
+          echo "Resolved version: '$VERSION'"
+ 
+          if [ -z "$VERSION" ]; then
+            echo "::error::Kunde inte läsa project.version från pom.xml - VERSION är tom."
+            exit 1
+          fi
+ 
+          ./mvnw clean spring-boot:build-image -DskipTests \
+            -Dspring-boot.build-image.imageName=${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/chorely:$VERSION \
+            -Dspring-boot.build-image.publish=true
+ 
           docker tag ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/chorely:$VERSION ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/chorely:latest
           docker push ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/chorely:latest
