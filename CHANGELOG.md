@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/FredrikKodar/chorely/compare/v1.3.0...v1.4.0) (2026-08-26)
+
+
+### Features
+
+* **cd:** Removed commented-out workflow_dispatch trigger from the YAML file. ([ce935df](https://github.com/FredrikKodar/chorely/commit/ce935dfc2a645b6f052a28d6cb6ac3f35107574a))
+
 ## [1.3.0](https://github.com/FredrikKodar/chorely/compare/v1.2.2...v1.3.0) (2026-08-26)
 
 
