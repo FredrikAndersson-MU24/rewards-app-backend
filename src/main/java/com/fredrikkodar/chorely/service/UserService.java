@@ -93,4 +93,9 @@ public class UserService {
         return UserMapper.INSTANCE.userToUserResponse(userRepository.save(savedUser));
     }
 
+    @PreAuthorize("hasRole('PARENT')")
+    public boolean isParentOfUserId(Integer targetId, Integer userId) {
+        return userRepository.existsByIdAndParentId(targetId, userId);
+    }
+
 }

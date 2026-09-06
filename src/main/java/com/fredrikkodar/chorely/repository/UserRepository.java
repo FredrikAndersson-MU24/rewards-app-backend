@@ -16,4 +16,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     List<User> findAllByParent(User user);
 
+    boolean existsByIdAndParentId(Integer targetId, Integer parentId);
+
 }
