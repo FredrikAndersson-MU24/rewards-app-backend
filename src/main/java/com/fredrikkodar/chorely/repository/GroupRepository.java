@@ -1,7 +1,6 @@
 package com.fredrikkodar.chorely.repository;
 
 import com.fredrikkodar.chorely.model.Group;
-import jakarta.persistence.Table;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
